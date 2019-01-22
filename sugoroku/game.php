@@ -1,144 +1,77 @@
 <?php
-
 class Game {
-
     public function getInstance() {
-
         $game = new Game();
-
         return $game;
-
     }
-
     
-
     public $board;
-
-    public function setBoard($board) {
-
-        $this -> board = $board;
-
+    public function setBoard() {
+        $board = $board;
         //var_dump($board);
-
-        echo "‚·‚²‚ë‚­‚ÌƒRƒ}”‚Í".$this -> board -> board."‚Å‚·B"."\n";
-
+        echo "ã™ã”ã‚ãã®ã‚³ãƒæ•°ã¯".$this -> boardLength."ã§ã™ã€‚"."\n";
     }
-
     
-
     public function addPlayer($playerName) {
-
         //$playerName = new Player();
-
         //var_dump($player->playerName);
-
-        echo "Zl–Ú‚ÌƒvƒŒƒCƒ„[‚Í".$playerName -> playerName."‚Å‚·B"."\n";
-
+        echo "ã€‡äººç›®ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯".$playerName -> playerName."ã§ã™ã€‚"."\n";
     }
-
-
 
     public function setDice() {
-
-        echo "ƒTƒCƒRƒ‚Ì€”õ‚ª‚Å‚«‚Ü‚µ‚½B"."\n";
-
+        echo "ã‚µã‚¤ã‚³ãƒ­ã®æº–å‚™ãŒã§ãã¾ã—ãŸã€‚"."\n";
     }
-
     
-
     public function start() {
-
-        echo 'ƒQ[ƒ€‚ğn‚ß‚Ü‚·B'."\n";
-
+        echo 'ã‚²ãƒ¼ãƒ ã‚’å§‹ã‚ã¾ã™ã€‚'."\n";
     
-//public function gameOn() {
-
-        $playerSquares = array ('player1square'=>0, 'player2square'=>0);
-
+    
+    
+    //public function gameOn() {
+        $playerSquares = array ('Taro'=>0, 'Jiro'=>0,'Saburo'=>0);
+        //$rollerNames=array('Taro', 'Jiro', 'Saburo')
         //var_dump($game);
-
         //var_dump($this -> board);
-
         //$until = $this -> board -> board;
-
         //var_dump($playerSquares['player1square']);
-
         //exit;
-
-        while (max($playerSquares) < $this->board->board) {
-
-            echo "1l–Ú‚ÌƒvƒŒƒCƒ„[‚Ì”Ô‚Å‚·B";
-
-            $dice = Dice::rollDice();
-
-            echo "ƒTƒCƒRƒ‚Ì–Ú‚Í".$dice."‚Å‚·B";
-
-            $playerSquares['player1square'] += $dice;
-
-            //var_dump($playerSquare);
-
-            echo "ƒvƒŒƒCƒ„[1‚Í".$playerSquares['player1square']."ƒ}ƒX–Ú‚É‚¢‚Ü‚·B"."\n";
-
-            if ($playerSquares['player1square'] >= $this->board->board) {
-
-                echo "ƒvƒŒƒCƒ„[1‚ªƒS[ƒ‹‚µ‚Ü‚µ‚½BƒvƒŒƒCƒ„[1‚ÌŸ—˜‚Å‚·B";
-
-                break;
-
-            } else {
-
-                echo "2l–Ú‚ÌƒvƒŒƒCƒ„[‚Ì”Ô‚Å‚·B";
-
-                $dice = Dice::rollDice();
-
-                echo "ƒTƒCƒRƒ‚Ì–Ú‚Í".$dice."‚Å‚·B";
-
-                $playerSquares['player2square'] += $dice;
-
-                echo "ƒvƒŒƒCƒ„[2‚Í".$playerSquares['player2square']."ƒ}ƒX–Ú‚É‚¢‚Ü‚·B"."\n";
-
-            }
-
-            if ($playerSquares['player2square'] >= $this->board->board) {
-
-                echo "ƒvƒŒƒCƒ„[2‚ªƒS[ƒ‹‚µ‚Ü‚µ‚½BƒvƒŒƒCƒ„[2‚ÌŸ—˜‚Å‚·B";
-
-                break;
-
-            }
-
         //while (max($playerSquares) < $this->board->board) {
-
-            //foreach ($playerSquares as $player => $playerSquare) {
-
-                //echo "Zl–Ú‚ÌƒvƒŒƒCƒ„[‚Ì”Ô‚Å‚·B";
-
+            //echo "1äººç›®ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç•ªã§ã™ã€‚";
+            //$dice = Dice::rollDice();
+            //echo "ã‚µã‚¤ã‚³ãƒ­ã®ç›®ã¯".$dice."ã§ã™ã€‚";
+            //$playerSquares['player1square'] += $dice;
+            //var_dump($playerSquare);
+            //echo "ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼1ã¯".$playerSquares['player1square']."ãƒã‚¹ç›®ã«ã„ã¾ã™ã€‚"."\n";
+            //if ($playerSquares['player1square'] >= $this->board->board) {
+                //echo "ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼1ãŒã‚´ãƒ¼ãƒ«ã—ã¾ã—ãŸã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼1ã®å‹åˆ©ã§ã™ã€‚";
+                //break;
+            //} else {
+                //echo "2äººç›®ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç•ªã§ã™ã€‚";
                 //$dice = Dice::rollDice();
-
-                //echo "ƒTƒCƒRƒ‚Ì–Ú‚Í".$dice."‚Å‚·B";
-
-                //$playerSquare += $dice;
-
-                //var_dump($playerSquare);
-
-                //var_dump($playerSquares['player1square']);
-
-                //exit;
-
-                //if ($playerSquare >= $this->board->board) {
-
-                //    echo "ƒS[ƒ‹‚µ‚Ü‚µ‚½B";
-
-                //    exit;
-
-                //}
-
+                //echo "ã‚µã‚¤ã‚³ãƒ­ã®ç›®ã¯".$dice."ã§ã™ã€‚";
+                //$playerSquares['player2square'] += $dice;
+                //echo "ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼2ã¯".$playerSquares['player2square']."ãƒã‚¹ç›®ã«ã„ã¾ã™ã€‚"."\n";
             //}
-
+            //if ($playerSquares['player2square'] >= $this->board->board) {
+                //echo "ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼2ãŒã‚´ãƒ¼ãƒ«ã—ã¾ã—ãŸã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼2ã®å‹åˆ©ã§ã™ã€‚";
+                //break;
+            //}
+        while (max($playerSquares) < $this->board->board) {
+            foreach ($playerSquares as $rollerName => $playerSquare) {
+                echo $rollerName."ã®ç•ªã§ã™ã€‚";
+                $dice = Dice::rollDice();
+                echo "ã‚µã‚¤ã‚³ãƒ­ã®ç›®ã¯".$dice."ã§ã™ã€‚";
+                $playerSquares[$rollerName] += $dice;
+                echo $rollerName."ã¯".$playerSquares[$rollerName]."ãƒã‚¹ç›®ã«ã„ã¾ã™ã€‚"."\n";
+                //var_dump($playerSquare);
+                //var_dump($playerSquares['player1square']);
+                //exit;
+                if ($playerSquares[$rollerName] >= $this->board->board) {
+                    echo $rollerName."ãŒã‚´ãƒ¼ãƒ«ã—ã¾ã—ãŸã€‚";
+                    exit;
+                }
+            }
         }
-
     }
-
 }
-
 ?>

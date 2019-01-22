@@ -1,40 +1,22 @@
 <?php
-
 class Board {
-
-    public $board;
-
-    public function __construct($board) {
-
-        $lines = file("data/board.csv");
-
-        $board = intval($lines[1]);
-
-        $this -> board = $board;
-
-        return $this;
-
+    public $boardData;
+    public function __construct($csvName) {
+        $handle = fopen($csvName, "r");
+        while ($boardData = fgetcsv($handle)) {
+            $this->boardData=$boardData;
+            return $this;
+        }
         //var_dump($board);
-
+        fclose($handle);
     }
-
-    
-//$board = new Board();
-
+    //$board = new Board();
     //public function setBoard($board) {
-
         //$board = 0;
-
         //var_dump($board);
-
         //$this -> board = $board;
-
         //$lines = file("data/board.csv");
-
         //$lines[1] = $board;
-
     //}
-
 }
-
 ?>
