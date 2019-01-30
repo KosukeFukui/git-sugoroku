@@ -1,1 +1,11 @@
-67,5,35,49
+boardLength,100
+rollAgain,23,5,6,67
+skipNextTurn,34,90,87
+forward1square,77,8
+forward2squares,3
+forward3squares,96
+backward1square,86
+backward2squares,54
+backward3squares,21
+backToStart,32
+changePlaces,60

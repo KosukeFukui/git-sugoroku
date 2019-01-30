@@ -1,6 +1,6 @@
 <?php
 class Dice{
-    public function rollDice() {
+    public static function rollDice() {
         $dice = rand(1,6);
         return $dice;
     }
