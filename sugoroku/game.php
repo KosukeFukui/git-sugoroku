@@ -7,14 +7,17 @@ class Game {
     
     public $board;
     public function setBoard($board) {
-        echo "すごろくのコマ数は".$board->boardLength."です。"."\n";
+        echo "すごろくのコマ数は".count($board->squares)."です。"."\n";
         $this->board=$board;
     }
 
     public $players;
+    public function getHowManyPlayers() {
+        return count($this->players);
+    }
     public function addPlayer($player) {
         $this->players[]=$player;
-        echo Player::$playerNumber."人目のプレイヤーは".$player->playerName."です。"."\n";
+        echo $this->getHowManyPlayers()."人目のプレイヤーは".$player->name."です。"."\n";
     }
 
     public function setDice() {
@@ -26,6 +29,12 @@ class Game {
         return $this->currentPlayer;
     }
 
+    public function goalCheck() {
+        if ($this->getCurrentPlayer()->position >= count($this->board->squares)) {
+            echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
+            exit;
+        }
+    }
     public function start() {
         echo 'ゲームを始めます。'."\n";
         while (true) {
@@ -34,22 +43,21 @@ class Game {
                 $player->currentDiceTime = 1;
                 if ($player->nextDiceTime == 1) {
                     while ($player->currentDiceTime != 0) {
-                        echo $player->playerName." の番です。";
+                        echo $player->name." の番です。";
                         $dice = Dice::rollDice();
                         echo "サイコロの目は ".$dice." です。";
-                        $player->playerPosition += $dice;
-                        echo $player->playerName." は ".$player->playerPosition." マス目にいます。"."\n";   
-                        if ($player->playerPosition >= $this->board->boardLength) {
-                            echo $player->playerName." がゴールしました。";
-                            exit;
-                        } elseif ($this->board->boardData[$player->playerPosition] != "") {
-                            $event = EventFactory::build($this->board->boardData[$player->playerPosition]);
-                            $event->event($this);
-                        }
+                        $player->position += $dice;
+                        echo $player->name." は ".$player->position." マス目にいます。"."\n";
+                        $this->goalCheck();   
+                        if ($this->board->squares[$player->position] != "") {
+                            $event = EventFactory::build($this->board->squares[$player->position]);
+                            $event->run($this);
+                            $this->goalCheck();
+                        } 
                         $player->currentDiceTime--;
                     }
                 } else {
-                    echo $player->playerName."は休みです。"."\n";
+                    echo $player->name."は１回休みです。"."\n";
                     $player->nextDiceTime = 1;
                 }
             }

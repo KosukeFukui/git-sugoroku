@@ -1,7 +1,7 @@
 <?php
 require_once("EventInterface.php");
-class RollAgain implements EventInterface {
-    public function event($game){
+class RollAgainEvent implements EventInterface {
+    public function run($game){
         $game->getCurrentPlayer()->currentDiceTime++;
         echo "もう１度サイコロを振ってください。";
     }
