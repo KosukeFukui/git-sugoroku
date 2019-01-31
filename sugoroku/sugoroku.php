@@ -5,7 +5,6 @@ require_once("player.php");
 require_once("dice.php");
 require_once("EventInterface.php");
 require_once("EventFactory.php");
-//require_once("normal.php");
 require_once("RollAgainEvent.php");
 require_once("SkipNextTurnEvent.php");
 require_once("Go1SquareEvent.php");

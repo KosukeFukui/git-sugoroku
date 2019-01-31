@@ -12,12 +12,9 @@ class Game {
     }
 
     public $players;
-    public function getHowManyPlayers() {
-        return count($this->players);
-    }
     public function addPlayer($player) {
         $this->players[]=$player;
-        echo $this->getHowManyPlayers()."人目のプレイヤーは".$player->name."です。"."\n";
+        echo $player->id."人目のプレイヤーは".$player->name."です。"."\n";
     }
 
     public function setDice() {
@@ -29,7 +26,15 @@ class Game {
         return $this->currentPlayer;
     }
 
-    public function goalCheck() {
+    private function rollOnce() {
+        $cp = $this->getCurrentPlayer();
+        echo $cp->name." の番です。";
+        $dice = Dice::rollDice();
+        echo "サイコロの目は ".$dice." です。";
+        $cp->position += $dice;
+        echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
+    }
+    private function goalCheck() {
         if ($this->getCurrentPlayer()->position >= count($this->board->squares)) {
             echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
             exit;
@@ -42,18 +47,14 @@ class Game {
                 $this->currentPlayer = $player;
                 $player->currentDiceTime = 1;
                 if ($player->nextDiceTime == 1) {
+                    $this->rollOnce();
+                    $this->goalCheck();
+                    $event = EventFactory::build($this->board->squares[$player->position]);
+                    $event->run($this);
+                    $player->currentDiceTime--;
                     while ($player->currentDiceTime != 0) {
-                        echo $player->name." の番です。";
-                        $dice = Dice::rollDice();
-                        echo "サイコロの目は ".$dice." です。";
-                        $player->position += $dice;
-                        echo $player->name." は ".$player->position." マス目にいます。"."\n";
-                        $this->goalCheck();   
-                        if ($this->board->squares[$player->position] != "") {
-                            $event = EventFactory::build($this->board->squares[$player->position]);
-                            $event->run($this);
-                            $this->goalCheck();
-                        } 
+                        $this->rollOnce();
+                        $this->goalCheck();
                         $player->currentDiceTime--;
                     }
                 } else {
