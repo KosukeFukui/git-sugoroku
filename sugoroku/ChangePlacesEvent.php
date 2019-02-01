@@ -12,9 +12,12 @@ class ChangePlacesEvent implements EventInterface {
         $cpp = $game->getCurrentPlayer()->position;
         $rpn = $randomPlayer->name;
         $rpp = $randomPlayer->position;
-        //var_dump($randomPlayer);
+
         list($cpp, $rpp) = [$rpp, $cpp];
-        echo "    ".$cpn."と".$rpn."は場所を入れ替わりました。"."\n".
+        $game->getCurrentPlayer()->position = $cpp;
+        $randomPlayer->position = $rpp;
+
+        echo "    ".$cpn."と".$rpn."は場所を入れ替わります。"."\n".
             "    ".$cpn."は".$cpp."マス目に移動し、".$rpn."は".$rpp."マス目に移動しました。"."\n";
     }
 }
