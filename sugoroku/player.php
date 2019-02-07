@@ -6,6 +6,7 @@ class Player {
     public $nextDiceTime;
     public static $count = 0;
     public $id;
+    public $ogusiCounter;
     public function __construct($name) {
         $this->name = $name;
         $this->position = 0;
@@ -13,6 +14,7 @@ class Player {
         $this->nextDiceTime = 1;
         self::$count++;
         $this->id = self::$count;
+        $this->ogusiCounter = 0;
     }
 }
 ?>

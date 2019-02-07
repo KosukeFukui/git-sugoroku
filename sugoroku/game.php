@@ -40,13 +40,30 @@ class Game {
             exit;
         }
     }
+    private function ogusiCheck() {
+        if ($this->getCurrentPlayer()->position < $this->players[3]->position) {
+            $this->getCurrentPlayer()->ogusiCounter = 1;
+        }
+    }
+    private function showResults() {
+        $results = array($this->players->name => $this->players->position);
+        var_dump($results);
+    }
+    private function changePlayerName() {
+        array_pop($this->players);
+        foreach ($this->players as $player) {
+            $player->name = $player->name."おぐしー";
+        }
+    }
     public function start() {
         echo 'ゲームを始めます。'."\n";
+        $this->players[3]->nextDiceTime = -4;
         while (true) {
             foreach ($this->players as $player) {
                 $this->currentPlayer = $player;
                 $player->currentDiceTime = 1;
-                if ($player->nextDiceTime == 1) {
+                $this->ogusiCheck();
+                if ($player->nextDiceTime == 1 && $player->ogusiCounter == 0) {
                     $this->rollOnce();
                     $this->goalCheck();
                     $event = EventFactory::build($this->board->squares[$player->position]);
@@ -57,9 +74,21 @@ class Game {
                         $this->goalCheck();
                         $player->currentDiceTime--;
                     }
+                } elseif ($player->nextDiceTime == 1 && $player->ogusiCounter == 1) {
+                    $player->position ++;
+                    echo $player->name."の番です。１マス進みます。".$player->name."は".$player->position."マス目にいます。"."\n";
+                    $this->goalCheck();
+                    $event = EventFactory::build($this->board->squares[$player->position]);
+                    $event->run($this);
+                    $player->currentDiceTime--;
+                    while ($player->currentDiceTime != 0) {
+                        $player->position ++;
+                        $this->goalCheck();
+                        $player->currentDiceTime--;
+                    }
                 } else {
-                    echo $player->name."は１回休みです。"."\n";
-                    $player->nextDiceTime = 1;
+                    echo $player->name."は休みです。"."\n";
+                    $player->nextDiceTime ++;
                 }
             }
         }

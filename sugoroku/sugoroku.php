@@ -16,12 +16,14 @@ require_once("Back3SquaresEvent.php");
 require_once("BackToStartEvent.php");
 require_once("ChangePlacesEvent.php");
 require_once("NullEvent.php");
+//require_once("result.php");
 
 $game = Game::getInstance();
 $game->setBoard(new Board('data/board.csv'));
 $game->addPlayer(new Player('Taro'));
 $game->addPlayer(new Player('Jiro'));
 $game->addPlayer(new Player('Saburo'));
+$game->addPlayer(new player('キングおぐしー'));
 $game->setDice(new Dice());
 $game->start();
 ?>
