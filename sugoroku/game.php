@@ -37,6 +37,12 @@ class Game {
     private function goalCheck() {
         if ($this->getCurrentPlayer()->position >= count($this->board->squares)) {
             echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
+            if ($this->getCurrentPlayer()->name == "キングおぐしー") {
+                $this->changePlayerNames();
+                $this->showResults();
+            } else {
+                $this->showResults();
+            }
             exit;
         }
     }
@@ -46,13 +52,27 @@ class Game {
         }
     }
     private function showResults() {
-        $results = array($this->players->name => $this->players->position);
-        var_dump($results);
-    }
-    private function changePlayerName() {
-        array_pop($this->players);
         foreach ($this->players as $player) {
-            $player->name = $player->name."おぐしー";
+            $playerOrders[$player->name]=$player->position;
+        }
+        //var_dump($playerOrders);
+        arsort($playerOrders);
+        //var_dump($playerOrders);
+        $playerPositionCount = array_count_values($playerOrders);
+        //var_dump($playerPositionCount);
+        $rank = 1;
+        foreach ($playerPositionCount as $position=>$count) {
+            for ($i = 0; $i < $count; $i++) {
+                echo $rank."位は".array_keys($playerOrders)[$rank - 1 + $i]."です。"."\n";
+                }
+                $rank += $count;
+        }
+    }
+    private function changePlayerNames() {
+        foreach ($this->players as $player) {
+            if ($player->name != "キングおぐしー") {
+                $player->name = $player->name."オグシー";
+            }
         }
     }
     public function start() {
