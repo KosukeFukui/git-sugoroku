@@ -25,13 +25,28 @@ class Game {
     public function getCurrentPlayer() {
         return $this->currentPlayer;
     }
-
+    public function getOgusi() {
+        foreach ($this->players as $player) {
+            if ($player->name == "キングおぐしー") {
+                return $player;
+            }
+        }
+    }
+    public function summonOgusi() {
+        $this->getOgusi()->nextDiceTime = -4;
+    }
     private function rollOnce() {
         $cp = $this->getCurrentPlayer();
         echo $cp->name." の番です。";
         $dice = Dice::rollDice();
         echo "サイコロの目は ".$dice." です。";
         $cp->position += $dice;
+        echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
+    }
+    private function ogusiRoll() {
+        $cp = $this->getCurrentPlayer();
+        echo $cp->name." の番です。".$cp->name."は１マスしか進めない。";
+        $cp->position ++;
         echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
     }
     private function goalCheck() {
@@ -47,7 +62,7 @@ class Game {
         }
     }
     private function ogusiCheck() {
-        if ($this->getCurrentPlayer()->position < $this->players[3]->position) {
+        if ($this->getCurrentPlayer()->position < $this->getOgusi()->position) {
             $this->getCurrentPlayer()->ogusiCounter = 1;
         }
     }
@@ -77,7 +92,7 @@ class Game {
     }
     public function start() {
         echo 'ゲームを始めます。'."\n";
-        $this->players[3]->nextDiceTime = -4;
+        $this->summonOgusi();
         while (true) {
             foreach ($this->players as $player) {
                 $this->currentPlayer = $player;
@@ -95,8 +110,7 @@ class Game {
                         $player->currentDiceTime--;
                     }
                 } elseif ($player->nextDiceTime == 1 && $player->ogusiCounter == 1) {
-                    $player->position ++;
-                    echo $player->name."の番です。１マス進みます。".$player->name."は".$player->position."マス目にいます。"."\n";
+                    $this->ogusiRoll();
                     $this->goalCheck();
                     $event = EventFactory::build($this->board->squares[$player->position]);
                     $event->run($this);
