@@ -2,8 +2,6 @@
 class EventFactory {
     public static function build ($square) {
         switch($square) {
-            //case "":
-                //return new Normal();
             case "RollAgain":
                 return new RollAgainEvent();
             case "SkipNextTurn":

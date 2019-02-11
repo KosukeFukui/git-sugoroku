@@ -1,11 +1,12 @@
 <?php
+//require_once("GameInterface.php");
 class Game {
-    public function getInstance() {
+    public static function getInstance() {
         $game = new Game();
         return $game;
     }
     
-    public $board;
+    private $board;
     public function setBoard($board) {
         echo "すごろくのコマ数は".count($board->squares)."です。"."\n";
         $this->board=$board;
@@ -25,50 +26,17 @@ class Game {
     public function getCurrentPlayer() {
         return $this->currentPlayer;
     }
-    public function getOgusi() {
-        foreach ($this->players as $player) {
-            if ($player->name == "キングおぐしー") {
-                return $player;
-            }
-        }
-    }
-    public function summonOgusi() {
-        $this->getOgusi()->nextDiceTime = -4;
-    }
-    private function rollOnce() {
-        $cp = $this->getCurrentPlayer();
-        echo $cp->name." の番です。";
-        $dice = Dice::rollDice();
-        echo "サイコロの目は ".$dice." です。";
-        $cp->position += $dice;
-        echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
-    }
-    private function ogusiRoll() {
-        $cp = $this->getCurrentPlayer();
-        echo $cp->name." の番です。".$cp->name."は１マスしか進めない。";
-        $cp->position ++;
-        echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
-    }
     private function goalCheck() {
-        if ($this->getCurrentPlayer()->position >= count($this->board->squares)) {
+        if ($this->getCurrentPlayer()->getPosition() >= count($this->board->squares)) {
             echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
-            if ($this->getCurrentPlayer()->name == "キングおぐしー") {
-                $this->changePlayerNames();
-                $this->showResults();
-            } else {
-                $this->showResults();
-            }
+            $this->getCurrentPlayer()->goalAction($this);
+            $this->showResults();
             exit;
-        }
-    }
-    private function ogusiCheck() {
-        if ($this->getCurrentPlayer()->position < $this->getOgusi()->position) {
-            $this->getCurrentPlayer()->ogusiCounter = 1;
         }
     }
     private function showResults() {
         foreach ($this->players as $player) {
-            $playerOrders[$player->name]=$player->position;
+            $playerOrders[$player->name]=$player->getPosition();
         }
         //var_dump($playerOrders);
         arsort($playerOrders);
@@ -83,47 +51,31 @@ class Game {
                 $rank += $count;
         }
     }
-    private function changePlayerNames() {
-        foreach ($this->players as $player) {
-            if ($player->name != "キングおぐしー") {
-                $player->name = $player->name."オグシー";
-            }
-        }
-    }
+    public $turn;
     public function start() {
         echo 'ゲームを始めます。'."\n";
-        $this->summonOgusi();
+        $this->turn =0;
         while (true) {
+            $this->turn ++;
+            //var_dump($this->players);
             foreach ($this->players as $player) {
                 $this->currentPlayer = $player;
                 $player->currentDiceTime = 1;
-                $this->ogusiCheck();
-                if ($player->nextDiceTime == 1 && $player->ogusiCounter == 0) {
-                    $this->rollOnce();
+                if ($player->nextDiceTime == 1) {
+                    $player->yourTurn($this);
                     $this->goalCheck();
-                    $event = EventFactory::build($this->board->squares[$player->position]);
+                    $event = EventFactory::build($this->board->squares[$player->getPosition()]);
                     $event->run($this);
-                    $player->currentDiceTime--;
-                    while ($player->currentDiceTime != 0) {
-                        $this->rollOnce();
-                        $this->goalCheck();
-                        $player->currentDiceTime--;
-                    }
-                } elseif ($player->nextDiceTime == 1 && $player->ogusiCounter == 1) {
-                    $this->ogusiRoll();
                     $this->goalCheck();
-                    $event = EventFactory::build($this->board->squares[$player->position]);
-                    $event->run($this);
-                    $player->currentDiceTime--;
                     while ($player->currentDiceTime != 0) {
-                        $player->position ++;
+                        $player->yourTurn($this);
                         $this->goalCheck();
-                        $player->currentDiceTime--;
                     }
                 } else {
                     echo $player->name."は休みです。"."\n";
-                    $player->nextDiceTime ++;
+                    $player->nextDiceTime++;
                 }
+                $player->endPhaseCheck($this);
             }
         }
     }
