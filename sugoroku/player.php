@@ -1,6 +1,6 @@
 <?php
-require_once("GameInterface.php");
-class Player implements GameInterface {
+require_once("PlayerInterface.php");
+class Player implements PlayerInterface {
     public $name;
     protected $position;
     public $currentDiceTime;
@@ -25,17 +25,22 @@ class Player implements GameInterface {
     }
     public function yourTurn($game) {
         $cp = $game->getCurrentPlayer();
-        if ($cp->ogusiCounter == 0) {
-            echo $cp->name." の番です。";
-            $diceResult = Dice::rollDice();
-            echo "サイコロの目は ".$diceResult." です。";
-            $cp->position += $diceResult;
-            echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
+        if ($cp->nextDiceTime == 1) {
+            if ($cp->ogusiCounter == 0) {
+                echo $cp->name." の番です。";
+                $diceResult = Dice::rollDice();
+                echo "サイコロの目は ".$diceResult." です。";
+                $cp->position += $diceResult;
+                echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
+            } else {
+                $cp->position ++;
+                echo $cp->name." の番です。".$cp->name."はしんどくて１マスしか進めない。".$cp->name." は ".$cp->position." マス目にいます。"."\n";
+            }
+            $cp->currentDiceTime --;
         } else {
-            $cp->position ++;
-            echo $cp->name." の番です。".$cp->name."はしんどくて１マスしか進めない。".$cp->name." は ".$cp->position." マス目にいます。"."\n";
-        }
-        $cp->currentDiceTime --;
+            echo $cp->name."は休みです。"."\n";
+            $cp->nextDiceTime ++;
+        } 
     }
     public function endPhaseCheck($game) {
     }

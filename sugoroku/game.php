@@ -1,5 +1,4 @@
 <?php
-//require_once("GameInterface.php");
 class Game {
     public static function getInstance() {
         $game = new Game();
@@ -8,7 +7,7 @@ class Game {
     
     private $board;
     public function setBoard($board) {
-        echo "すごろくのコマ数は".count($board->squares)."です。"."\n";
+        echo "すごろくのコマ数は".$board->boardLength."です。"."\n";
         $this->board=$board;
     }
 
@@ -27,7 +26,8 @@ class Game {
         return $this->currentPlayer;
     }
     private function goalCheck() {
-        if ($this->getCurrentPlayer()->getPosition() >= count($this->board->squares)) {
+        //var_dump($this->getCurrentPlayer()->getPosition());
+        if ($this->getCurrentPlayer()->getPosition() >= $this->board->boardLength) {
             echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
             $this->getCurrentPlayer()->goalAction($this);
             $this->showResults();
@@ -61,19 +61,14 @@ class Game {
             foreach ($this->players as $player) {
                 $this->currentPlayer = $player;
                 $player->currentDiceTime = 1;
-                if ($player->nextDiceTime == 1) {
+                $player->yourTurn($this);
+                $this->goalCheck();
+                $event = EventFactory::build($this->board->squares[$player->getPosition()]);
+                $event->run($this);
+                $this->goalCheck();
+                while ($player->currentDiceTime != 0) {
                     $player->yourTurn($this);
                     $this->goalCheck();
-                    $event = EventFactory::build($this->board->squares[$player->getPosition()]);
-                    $event->run($this);
-                    $this->goalCheck();
-                    while ($player->currentDiceTime != 0) {
-                        $player->yourTurn($this);
-                        $this->goalCheck();
-                    }
-                } else {
-                    echo $player->name."は休みです。"."\n";
-                    $player->nextDiceTime++;
                 }
                 $player->endPhaseCheck($this);
             }

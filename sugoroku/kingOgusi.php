@@ -10,12 +10,21 @@ class KingOgusi extends Player {
     }
     public function yourTurn($game) {
         $cp = $game->getCurrentPlayer();
-        echo $cp->name." の番です。";
-        $diceResult = Dice::rollDice();
-        echo "サイコロの目は ".$diceResult." です。";
-        $cp->position += $diceResult;
-        echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
-        $cp->currentDiceTime --;
+        if ($cp->nextDiceTime == 1) {
+            echo $cp->name." の番です。";
+            $diceResult = Dice::rollDice();
+            echo "サイコロの目は ".$diceResult." です。";
+            $cp->position += $diceResult;
+            echo $cp->name." は ".$cp->position." マス目にいます。"."\n";
+            $cp->currentDiceTime --;
+        } elseif ($game->turn <= 5) {
+            echo $cp->name."は休みです。"."\n";
+            $cp->nextDiceTime ++;
+            $cp->currentDiceTime = 0;
+        } else {
+            echo $cp->name."は休みです。"."\n";
+            $cp->nextDiceTime ++;
+        } 
     }
     public function endPhaseCheck($game) {
         $cp = $game->getCurrentPlayer();
