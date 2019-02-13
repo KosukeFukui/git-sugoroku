@@ -1,6 +1,7 @@
 <?php
 require_once("game.php");
 require_once("board.php");
+require_once("AbstractPlayer.php");
 require_once("player.php");
 require_once("kingOgusi.php");
 require_once("dice.php");

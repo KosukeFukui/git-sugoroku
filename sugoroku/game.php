@@ -7,14 +7,22 @@ class Game {
     
     private $board;
     public function setBoard($board) {
-        echo "すごろくのコマ数は".$board->boardLength."です。"."\n";
+        echo "すごろくのコマ数は".count($board->squares)."です。"."\n";
         $this->board=$board;
     }
 
     public $players;
+    public $allPlayers;
+    public $normalPlayers;
     public function addPlayer($player) {
-        $this->players[]=$player;
+        $this->allPlayers[]=$player;
+        if ($player->type == 0) {
+            $this->normalPlayers[]=$player;
+        }
         echo $player->id."人目のプレイヤーは".$player->name."です。"."\n";
+    
+    //var_dump($this->allPlayers);
+    //var_dump($this->normalPlayers);
     }
 
     public function setDice() {
@@ -27,7 +35,7 @@ class Game {
     }
     private function goalCheck() {
         //var_dump($this->getCurrentPlayer()->getPosition());
-        if ($this->getCurrentPlayer()->getPosition() >= $this->board->boardLength) {
+        if ($this->getCurrentPlayer()->getPosition() >= count($this->board->squares)) {
             echo $this->getCurrentPlayer()->name."がゴールしました。"."\n";
             $this->getCurrentPlayer()->goalAction($this);
             $this->showResults();
@@ -35,7 +43,7 @@ class Game {
         }
     }
     private function showResults() {
-        foreach ($this->players as $player) {
+        foreach ($this->allPlayers as $player) {
             $playerOrders[$player->name]=$player->getPosition();
         }
         //var_dump($playerOrders);
@@ -57,12 +65,14 @@ class Game {
         $this->turn =0;
         while (true) {
             $this->turn ++;
+            echo $this->turn;
             //var_dump($this->players);
-            foreach ($this->players as $player) {
+            foreach ($this->allPlayers as $player) {
                 $this->currentPlayer = $player;
                 $player->currentDiceTime = 1;
                 $player->yourTurn($this);
                 $this->goalCheck();
+                //var_dump($player->position);exit;
                 $event = EventFactory::build($this->board->squares[$player->getPosition()]);
                 $event->run($this);
                 $this->goalCheck();

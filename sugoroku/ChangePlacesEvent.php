@@ -3,22 +3,22 @@ require_once("EventInterface.php");
 class ChangePlacesEvent implements EventInterface {
     public function run($game) {
         $randomPlayerId = 1;
-        $randomPlayer = $game->players[$randomPlayerId - 1];
+       
+        if ($game->turn <= 5) {
+            $game->players = $game->normalPlayers;
+        } else {
+            $game->players = $game->allPlayers;
+        }
+        do {
+        $randomPlayerId = $game->players[array_rand($game->players)]->id;
+        } while ($randomPlayerId == $game->getCurrentPlayer()->id);
+        
+        $randomPlayer = $game->players[$randomPlayerId-1];
         $cpn = $game->getCurrentPlayer()->name;
         $cpp = $game->getCurrentPlayer()->getPosition();
         $rpn = $randomPlayer->name;
-        $rpp = $randomPlayer->getPosition();
+        $rpp = $randomPlayer->getPosition(); 
 
-        if ($game->turn <= 5) {
-            do {
-                $randomPlayerId = $game->players[array_rand($game->players)]->id;
-            } while ($randomPlayerId == $game->getCurrentPlayer()->id || $rpn == "キングおぐしー");
-        } else {
-            do {
-                $randomPlayerId = $game->players[array_rand($game->players)]->id;
-            } while ($randomPlayerId == $game->getCurrentPlayer()->id);
-        }
-        
         list($cpp, $rpp) = [$rpp, $cpp];
         $ncpp = $game->getCurrentPlayer()->getPosition();
         $ncpp = $cpp;
