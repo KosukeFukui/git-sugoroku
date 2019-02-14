@@ -65,7 +65,7 @@ class Game {
         $this->turn =0;
         while (true) {
             $this->turn ++;
-            echo $this->turn;
+            //echo $this->turn;
             //var_dump($this->players);
             foreach ($this->allPlayers as $player) {
                 $this->currentPlayer = $player;
